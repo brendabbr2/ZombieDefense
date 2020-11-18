@@ -5,7 +5,7 @@ import Zombie_Defense.Tablero;
 public class Personaje {
     private int x; //Coordenadas
     private int y;
-    private int vida = 5;
+    private int vida;
     private int distancia;  //Espacios que se puede mover
     /*
     La vida empieza en 5 para todos 
@@ -23,7 +23,7 @@ public class Personaje {
     2: Vampiro,     Guerrero
     3: Zombie,      Caballero
     */
-    private int vision; //Espacios que pueden ver
+
 
     private int defensa;
     /*
@@ -44,12 +44,10 @@ public class Personaje {
         this.es_Defensor = es_Defensor;
         this.directorio = directorio;
         this.tablero = tablero;
+        this.vida = 5;
         setDistancia();
-        setVision();
         setAtaque();
         setDefensa();
-
-
 
     }
 
@@ -101,19 +99,7 @@ public class Personaje {
         else{this.defensa = 2;} //Guerreros
     }
 
-    public int getVision() {
-        return vision;
-    }
 
-    public void setVision() {
-        if ((this.directorio).equals("Fantasma.png")){ this.vision = 3;}
-        else if ((this.directorio).equals("Vampiro.png")){this.vision = 2;}
-        else if ((this.directorio).equals("Zombie.png")){this.vision = 1;}
-        else if ((this.directorio).equals("Caballero.png")){this.vision = 2;}
-        else if ((this.directorio).equals("Soldado.png")){this.vision = 1;}
-        else{this.vision = 3;} //Guerreros
-
-    }
 
     public int getDistancia() {
         return this.distancia;

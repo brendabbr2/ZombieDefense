@@ -5,7 +5,9 @@ import java.util.Random;
 
 public class Atacante extends Personaje {
 
+    private int vision; //Espacios que pueden ver
     public boolean drop;
+
     /*
     * El atacante droppea o un item o un arma
     * Item = True
@@ -16,6 +18,8 @@ public class Atacante extends Personaje {
     public Atacante(int x, int y, boolean es_Defensor, String directorio, Tablero tablero)
     {
         super(x,y,es_Defensor,directorio, tablero);
+        setVision();
+        setDrop();
     }
 
     public void setDrop()
@@ -28,6 +32,20 @@ public class Atacante extends Personaje {
 
     public boolean isDrop() {
         return drop;
+    }
+
+    public int getVision() {
+        return vision;
+    }
+
+    public void setVision() {
+        if ((this.getDirectorio()).equals("Fantasma.png")){ this.vision = 3;}
+        else if ((this.getDirectorio()).equals("Vampiro.png")){this.vision = 2;}
+        else if ((this.getDirectorio()).equals("Zombie.png")){this.vision = 1;}
+        else if ((this.getDirectorio()).equals("Caballero.png")){this.vision = 2;}
+        else if ((this.getDirectorio()).equals("Soldado.png")){this.vision = 1;}
+        else{this.vision = 3;} //Guerreros
+
     }
 
     @Override
