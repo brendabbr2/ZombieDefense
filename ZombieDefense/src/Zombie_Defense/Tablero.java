@@ -9,6 +9,7 @@ import java.awt.geom.*;
 import java.awt.image.*;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.imageio.*;
 import javax.swing.*;
 
@@ -16,14 +17,15 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class Tablero extends JComponent {
-    
-    
-    public int contadorTurno = 1;  //Contador de turnos. Cada 4 no juega 
+
+    public boolean en_Turno;
+
+    public int contadorTurno = 0;  //Contador de turnos. Cada 4 no juega
     
     //Creamos a NULL_IMAGE porque se debe retornar mucho en las funciones con imagenes
     private static final Image NULL_IMAGE = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB);
 
-    private final int Cuadro_ancho = 65;    //El tama;o de cada cuadro es 65x65
+    private final int Cuadro_ancho = 65;    //El tamaño de cada cuadro es 65x65
     public ArrayList<Personaje> Defensores; //Lista de defensores (nosotros)
     public ArrayList<Personaje> Atacantes; //Lista de atacantes (zombies)
     
@@ -36,9 +38,21 @@ public class Tablero extends JComponent {
     private final int columnas = 8;
     
     public ArrayList<Cuadro> Cuadros;       //Lista de los cuadros
-    
+
+
     private final Integer[][] pieza;              //Cada cuadro del tablero
     private final String tablero_directorio = "imágenes" + File.separator + "tablero.png";
+    private final String base_directorio = "imágenes" + File.separator + "Base.png";
+    private final String tumba_directorio = "imágenes" + File.separator + "tumba.png";
+
+
+    public boolean isEn_Turno() {
+        return en_Turno;
+    }
+
+    public void setEn_Turno(boolean en_Turno) {
+        this.en_Turno = en_Turno;
+    }
 
     public void crearCuadros()
     //Añade en las listas los cuadros y personajes iniciales
@@ -49,22 +63,44 @@ public class Tablero extends JComponent {
             for (int j = 0; j < columnas; j++)
             {
                 pieza[i][j] = 0;
-                Cuadros.add(new Cuadro(i, j, "vacio"));
+                if (i == 0 && j == 7)
+                {
+                    Cuadros.add(new Cuadro(j, i, "Base"));
+                }
+                else if ((i == 0 && j == 0)||(i==0 && j==7)||(i==7 && j==7))
+                {
+                    Cuadros.add(new Cuadro(j, i, "Tumba"));
+                }
+                Cuadros.add(new Cuadro(j, i, "Vacio"));
             }
         }
 
         //Parametros:   int x, int y, boolean esDefensor, String direccion, Tablero tablero, int vida, int ataque//
-        Defensores.add(new Defensor(3,1,true,"Guerrero.png",this, 5, 2));
-        Defensores.add(new Defensor(4,1,true,"Caballero.png",this, 5, 3));
-        Defensores.add(new Defensor(5,1,true,"Soldado.png",this, 5, 1));
+        Defensores.add(new Defensor(3,0,true,"Guerrero.png",this, 5, 2, 1));
+        Defensores.add(new Defensor(3,3,true,"Caballero.png",this, 5, 3, 2));
+        Defensores.add(new Defensor(7,3,true,"Soldado.png",this, 5, 1, 3));
 
 
-        Atacantes.add(new Atacante(5,7,false,"Fantasma.png",this, 5, 1));
-        Atacantes.add(new Atacante(1,7,false,"Vampiro.png",this, 5, 2));
-        Atacantes.add(new Atacante(6,7,false,"Zombie.png",this, 5, 3));
-   
+        Atacantes.add(new Atacante(0,0,false,"Fantasma.png",this, 5, 1, 1));
+        Atacantes.add(new Atacante(0,7,false,"Vampiro.png",this, 5, 2, 1));
+        Atacantes.add(new Atacante(7,7,false,"Zombie.png",this, 5, 3, 1));
+
+
 
     }
+
+    public void actionPerformed(ActionEvent e){}
+
+
+
+/*
+* Image active_square = cargarImagen("imágenes" + File.separator + "activo.png");
+  Inmoviles.add(new DrawingImage(active_square, new Rectangle2D.Double(Cuadro_ancho*personajeActual.getX(),
+  * Cuadro_ancho*personajeActual.getY(), active_square.getWidth(null), active_square.getHeight(null))));
+  *
+*        Image tumba = cargarImagen(tumba_directorio);
+        Inmoviles.add(new DrawingImage(tumba, new Rectangle2D.Double(0, 0, 65, 65)));
+* */
 
     public Tablero() {
 
@@ -75,7 +111,10 @@ public class Tablero extends JComponent {
         Defensores = new ArrayList();
         Atacantes = new ArrayList();
         Cuadros = new ArrayList();
+        en_Turno = true;
         crearCuadros();
+
+
         
         //Dimensiones
         this.setBackground(new Color(37,13,84));
@@ -84,7 +123,7 @@ public class Tablero extends JComponent {
         this.setMaximumSize(new Dimension(1000, 1000));
 
         //Mouse
-        this.addMouseListener(mouseAdapter);
+        this.addMouseListener(turnoDefensor);
         this.addComponentListener(componentAdapter);
         this.addKeyListener(keyAdapter);
    
@@ -97,14 +136,15 @@ public class Tablero extends JComponent {
     private void crearTablero()
     {
         //Asignamos a los cuadros los ocupantes
-        
-        
-      
+
         Moviles.clear();
         Inmoviles.clear();
         
         Image imgTablero = cargarImagen(tablero_directorio);
         Inmoviles.add(new DrawingImage(imgTablero, new Rectangle2D.Double(0, 0, imgTablero.getWidth(null), imgTablero.getHeight(null))));
+
+        Image base = cargarImagen(base_directorio);                  //65 * 7
+        Inmoviles.add(new DrawingImage(base, new Rectangle2D.Double(455, 0,65,65)));
 
         
         //Se activa el cuadro rojo con un click.
@@ -154,12 +194,28 @@ public class Tablero extends JComponent {
         }
         return null;
     }
-    
+
+    public Cuadro getCuadro(int x, int y){
+        for (Cuadro c : Cuadros)
+        {
+            if (c.getX() == x && c.getY() == y)
+            {
+                return c;
+            }
+        }
+        return null;
+    }
     
 
     /////////////////////EL MOUSE/////////////////
-    
-    private final MouseAdapter mouseAdapter = new MouseAdapter() {
+
+
+    public MouseAdapter turnoDefensor = new MouseAdapter() {
+
+
+        int personajes = 0;
+
+
 
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -168,95 +224,82 @@ public class Tablero extends JComponent {
         @Override
         public void mousePressed(MouseEvent e) {
             int d_X = e.getX();
-            int d_Y = e.getY();  
-            int Clicked_Row = d_Y / Cuadro_ancho;   //Coordenadas de:
-            int Clicked_Column = d_X / Cuadro_ancho;//El cuadro clickeado
-                                                    //En espa;ol se ve feo
-            boolean en_Turno = true; //Si es nuestro turno de jugar
-            
-            //Cada cuatro turnos se mueven los zombies
-            //En otras palabras: no jugamos nosotros
-            if (contadorTurno%4 == 0 && contadorTurno != 0)
-            {
-                en_Turno = false;
-            }
-              
-            
-                                        //Aquí es cuando el usuario clickea una pieza.
-            
-            //Primero ocupamos saber quien es el personaje (o si hay)
-            Personaje clicked_piece = getPiece(Clicked_Column, Clicked_Row);
-            
+            int d_Y = e.getY();
+            int Clicked_Row = d_Y / Cuadro_ancho;           //Coordenadas del cuadro clickeado
+            int Clicked_Column = d_X / Cuadro_ancho;
+
+                                  //Si es nuestro turno de jugar
+            boolean activado = true;
+
+            //Aquí es cuando el usuario clickea una pieza.
+
+            Personaje clicked_piece = getPiece(Clicked_Column, Clicked_Row);  //Primero ocupamos saber quien es el personaje (o si hay)
+
+            if (en_Turno) {
+
+
             /*
             Las acciones a realizar dependen de:
-            
+
             A quién tenemos clickeado: personajeActual
             Y a quién acabamos de clickear: clicked_piece
-            
-            Además de si estamos en nuestro turno o no
             */
-            if (personajeActual == null && clicked_piece != null && 
-            //Si no hay personaje asigando (clickeado) y clickeamos algo y 
-            //es nuestro turno y la pieza clickeada es el defensor       
-           //...O no es nuestro turno y la pieza clickeada es atacante
-                    ((en_Turno && clicked_piece.esDefensor()) || (!en_Turno && clicked_piece.esAtacante())))
-            {
-                personajeActual = clicked_piece; //Entonces la pieza clickeada es nuestro personaje
-                                                  
-            }
-            else if (personajeActual != null && personajeActual.getX() == Clicked_Column && personajeActual.getY() == Clicked_Row)
-            //Si ya hay un personaje clickeado, y ese personaje coincide con la pieza clickeada
-            {
-                //Es un doble click, entonces volvemos a lo mismo. No hay nada
-                personajeActual = null;
-            }
-            else if (personajeActual != null && personajeActual.permitirMover(Clicked_Column, Clicked_Row) 
-            //Si hay un personaje clickeado, y ese personaje se puede mover (no hay obstaculos)
-            //y es nuestro turno y ese personaje clickeado es un defensor
-            //O si no es nuestro turno y el turno es del atacante
-                    //Eso significa peligro
-                    && ((en_Turno && personajeActual.esDefensor()) || (!en_Turno && personajeActual.esAtacante())))
-            {
-                // Si clickeamos una pieza
-                if (clicked_piece != null)
+
+                if (personajeActual == null && clicked_piece != null &&
+                        clicked_piece.esDefensor())
+                    /*Si no hay personaje asigando (clickeado) y clickeamos algo y
+                    es nuestro turno y la pieza clickeada es el defensor*/ {
+                    personajeActual = clicked_piece;
+                } else if (personajeActual != null && personajeActual.getX() == Clicked_Column && personajeActual.getY() == Clicked_Row)
+                //Si ya hay un personaje clickeado, y ese personaje coincide con la pieza clickeada
                 {
-                    //Y esta pieza es defensor
-                    if (clicked_piece.esDefensor())
-                    {
-                        //Eliminamos a nuestro compa;ero
-                        Defensores.remove(clicked_piece);
-                    }
-                    else
-                    {
-                        //Eliminamos al enemigo
-                        Atacantes.remove(clicked_piece);
-                    }
-                }
-                // Finalmente realiza el movimiento de irse al lugar de click
-                personajeActual.mover(Clicked_Column, Clicked_Row);
-                //Active_Piece.setX(Clicked_Column);
-               // personajeActual.setY(Clicked_Row);
-               
-                
-                // si el personaje actual es un defensor
-                if (personajeActual.getClass().equals(Defensor.class))
+                    //Es un doble click, entonces volvemos a lo mismo. No hay nada
+                    personajeActual = null;
+                } else if (personajeActual != null && personajeActual.permitirMover(Clicked_Column, Clicked_Row)
+                        && personajeActual.getMovido() == false && personajeActual.esDefensor())
+                //Si hay un personaje clickeado, y ese personaje se puede mover (no hay obstaculos)
+                //y es nuestro turno y ese personaje clickeado es un defensor
                 {
-                    //Significa que se ha movido
-                    Defensor castedPawn = (Defensor)(personajeActual);
-                    //Ponemos la se;al de que se ha movido en True
-                    castedPawn.setHasMoved(true);
+                    personajeActual.mover(Clicked_Column, Clicked_Row);   //Mover defensor
+
+                    // si el personaje actual es un defensor
+                    if (personajeActual.getClass().equals(Defensor.class)) {
+                        //Significa que se ha movido
+                        Defensor jugadorMovido = (Defensor) (personajeActual);
+                        //Ponemos la señal de que se ha movido en True
+                        jugadorMovido.setMovido(true);
+                    }
+                    //Vaciamos el personaje actual
+                    personajeActual = null;
+                    contadorTurno++;
                 }
-                
-                //Vaciamos el personaje actual 
-                personajeActual = null;
-                contadorTurno++;
+                crearTablero();
             }
-            crearTablero();
         }
 
-        //Funciones para que el mouse responda al movimiento
+        /*
+        * for (int a = 0; a <= 3; a++) {
+                    int total = 0;
+                    Image tumba = cargarImagen(tumba_directorio);
+                    while (total <= 3) {
+                        int posX = ThreadLocalRandom.current().nextInt(0, 8);
+                        int posY = ThreadLocalRandom.current().nextInt(0, 8);
+
+                        for (Cuadro cuadro : Cuadros) {
+                            if (cuadro.getX() == posX && cuadro.getY() == posY) {
+                                if ((cuadro.getTipo()).equals("Vacio")) {
+                                    cuadro.setTipo("Tumba");
+                                    Inmoviles.add(new DrawingImage(tumba, new Rectangle2D.Double(posX, posY, 65, 65)));
+                                    total++;
+                                }
+                            }
+                        }
+                    }
+                }
+        * */
+
         @Override
-        public void mouseDragged(MouseEvent e) {		
+        public void mouseDragged(MouseEvent e) {
         }
 
         @Override
@@ -264,15 +307,16 @@ public class Tablero extends JComponent {
         }
 
         @Override
-        public void mouseWheelMoved(MouseWheelEvent e) 
+        public void mouseWheelMoved(MouseWheelEvent e)
         {
-        }	
+        }
 
-        
     };
 
-    
-    
+
+
+
+
     //Funciones para poner las imagenes de las casillas
     private void adjustShapePositions(double dx, double dy) {
 
@@ -315,7 +359,7 @@ public class Tablero extends JComponent {
         }
     }
 
-    private ComponentAdapter componentAdapter = new ComponentAdapter() {
+    private final ComponentAdapter componentAdapter = new ComponentAdapter() {
 
         @Override
         public void componentHidden(ComponentEvent e) {
@@ -338,7 +382,7 @@ public class Tablero extends JComponent {
         }	
     };
 
-    private KeyAdapter keyAdapter = new KeyAdapter() {
+    private final KeyAdapter keyAdapter = new KeyAdapter() {
 
         @Override
         public void keyPressed(KeyEvent e) {

@@ -21,9 +21,7 @@ public class Barrera extends Cuadro{
         this.intensidad = intensidad;
     }
 
-    public void setDirectorio(String directorio) {
-        this.directorio = directorio;
-    }
+    public void setDirectorio(String directorio) { this.directorio = directorio; }
 
     public String getDirectorio() {
         return directorio;

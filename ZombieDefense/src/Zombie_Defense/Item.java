@@ -5,8 +5,6 @@ package Zombie_Defense;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-
-
 public class Item {
     
     public Tablero tablero;
@@ -14,8 +12,8 @@ public class Item {
     /* Los tres tipos de items:
         
         Collar: Aumenta en 1 la vida
+        Pocion: Aumenta en 2 la vida
         Flecha: Aumenta el ataque en 1
-        Abrigo: Aumenta la defensa en 1
         */
     
     private int x;   //Coordenadas
@@ -43,7 +41,7 @@ public class Item {
         } else if (num == 2){
             this.tipo = "Flecha";
         } else {
-            this.tipo = "Abrigo";
+            this.tipo = "Pocion";
         }
     }
 
