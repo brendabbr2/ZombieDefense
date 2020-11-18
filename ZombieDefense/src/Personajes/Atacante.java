@@ -13,9 +13,9 @@ public class Atacante extends Personaje {
     * Se escoge al azar
     * */
 
-    public Atacante(int x, int y, boolean es_Defensor, String directorio, Tablero tablero, int vida, int ataque, int distancia)
+    public Atacante(int x, int y, boolean es_Defensor, String directorio, Tablero tablero)
     {
-        super(x,y,es_Defensor,directorio, tablero, vida, ataque, distancia);
+        super(x,y,es_Defensor,directorio, tablero);
     }
 
     public void setDrop()

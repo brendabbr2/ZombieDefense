@@ -75,15 +75,15 @@ public class Tablero extends JComponent {
             }
         }
 
-        //Parametros:   int x, int y, boolean esDefensor, String direccion, Tablero tablero, int vida, int ataque//
-        Defensores.add(new Defensor(3,0,true,"Guerrero.png",this, 5, 2, 1));
-        Defensores.add(new Defensor(3,3,true,"Caballero.png",this, 5, 3, 2));
-        Defensores.add(new Defensor(7,3,true,"Soldado.png",this, 5, 1, 3));
+        //Parametros:   int x, int y, boolean esDefensor, String direccion, Tablero tablero
+        Defensores.add(new Defensor(3,0,true,"Guerrero.png",this));
+        Defensores.add(new Defensor(3,3,true,"Caballero.png",this));
+        Defensores.add(new Defensor(7,3,true,"Soldado.png",this));
 
 
-        Atacantes.add(new Atacante(0,0,false,"Fantasma.png",this, 5, 1, 1));
-        Atacantes.add(new Atacante(0,7,false,"Vampiro.png",this, 5, 2, 1));
-        Atacantes.add(new Atacante(7,7,false,"Zombie.png",this, 5, 3, 1));
+        Atacantes.add(new Atacante(0,0,false,"Fantasma.png",this));
+        Atacantes.add(new Atacante(0,7,false,"Vampiro.png",this));
+        Atacantes.add(new Atacante(7,7,false,"Zombie.png",this));
 
 
 

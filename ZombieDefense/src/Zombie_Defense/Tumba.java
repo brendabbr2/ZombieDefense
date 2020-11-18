@@ -13,6 +13,8 @@ public class Tumba extends Cuadro {
     public String getDirectorio() {
         return "tumba";
     }
+
+
     
     
     

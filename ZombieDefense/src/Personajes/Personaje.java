@@ -5,7 +5,7 @@ import Zombie_Defense.Tablero;
 public class Personaje {
     private int x; //Coordenadas
     private int y;
-    private final int vida;
+    private int vida = 5;
     private int distancia;  //Espacios que se puede mover
     /*
     La vida empieza en 5 para todos 
@@ -23,6 +23,7 @@ public class Personaje {
     2: Vampiro,     Guerrero
     3: Zombie,      Caballero
     */
+    private int vision; //Espacios que pueden ver
 
     private int defensa;
     /*
@@ -36,18 +37,22 @@ public class Personaje {
     private String directorio;        //Lugar de imagen
     public Tablero tablero;           //Existencia en el tablero
 
-    public Personaje(int x, int y, boolean es_Defensor, String directorio, Tablero tablero, int vida, int ataque, int distancia)
+    public Personaje(int x, int y, boolean es_Defensor, String directorio, Tablero tablero)
     {
-        this.es_Defensor = es_Defensor;
         this.x = x;
         this.y = y;
+        this.es_Defensor = es_Defensor;
         this.directorio = directorio;
         this.tablero = tablero;
-        this.vida = vida;
-        this.ataque = ataque;
-        this.distancia = distancia;
+        setDistancia();
+        setVision();
+        setAtaque();
+        setDefensa();
+
+
+
     }
-    
+
     /////////////////////////////////////////////Setters y getters
     public String getDirectorio()
     {
@@ -82,12 +87,46 @@ public class Personaje {
         return y;
     }
 
-    public int getDistancia() {
-        return distancia;
+
+    public int getDefensa() {
+        return defensa;
     }
 
-    public void setDistancia(int distancia) {
-        this.distancia = distancia;
+    public void setDefensa() {
+        if ((this.directorio).equals("Fantasma.png")){ this.defensa = 3;}
+        else if ((this.directorio).equals("Vampiro.png")){this.defensa = 2;}
+        else if ((this.directorio).equals("Zombie.png")){this.defensa = 1;}
+        else if ((this.directorio).equals("Caballero.png")){this.defensa = 3;}
+        else if ((this.directorio).equals("Soldado.png")){this.defensa = 1;}
+        else{this.defensa = 2;} //Guerreros
+    }
+
+    public int getVision() {
+        return vision;
+    }
+
+    public void setVision() {
+        if ((this.directorio).equals("Fantasma.png")){ this.vision = 3;}
+        else if ((this.directorio).equals("Vampiro.png")){this.vision = 2;}
+        else if ((this.directorio).equals("Zombie.png")){this.vision = 1;}
+        else if ((this.directorio).equals("Caballero.png")){this.vision = 2;}
+        else if ((this.directorio).equals("Soldado.png")){this.vision = 1;}
+        else{this.vision = 3;} //Guerreros
+
+    }
+
+    public int getDistancia() {
+        return this.distancia;
+    }
+
+    public void setDistancia() {
+        if ((this.directorio).equals("Fantasma.png")){ this.distancia = 1;}
+        else if ((this.directorio).equals("Vampiro.png")){this.distancia = 2;}
+        else if ((this.directorio).equals("Zombie.png")){this.distancia = 3;}
+        else if ((this.directorio).equals("Caballero.png")){this.distancia = 2;}
+        else if ((this.directorio).equals("Soldado.png")){this.distancia = 3;}
+        else{this.distancia = 1;} //Guerreros
+
     }
 
     public void setMovido(boolean movido)
@@ -95,12 +134,34 @@ public class Personaje {
         this.movido = movido;
     }
 
+    public int getVida() {
+        return vida;
+    }
+
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
+
+    public int getAtaque() {
+        return ataque;
+    }
+
+    public void setAtaque() {
+        if ((this.directorio).equals("Fantasma.png")){ this.ataque = 3;}
+        else if ((this.directorio).equals("Vampiro.png")){this.ataque = 2;}
+        else if ((this.directorio).equals("Zombie.png")){this.ataque = 1;}
+        else if ((this.directorio).equals("Caballero.png")){this.ataque = 3;}
+        else if ((this.directorio).equals("Soldado.png")){this.ataque = 1;}
+        else{this.ataque = 2;} //Guerreros
+
+    }
+
+
+
     public boolean getMovido()
     {
         return movido;
     }
-
-
     /////////////////////////////////////////////Metodos
     public boolean permitirMover(int posX, int posY)
     {
