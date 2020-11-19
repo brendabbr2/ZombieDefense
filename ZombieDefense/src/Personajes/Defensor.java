@@ -1,9 +1,11 @@
 package Personajes;
 
 import Zombie_Defense.Cuadro;
+import Zombie_Defense.Estructura;
+import Zombie_Defense.Item;
 import Zombie_Defense.Tablero;
 
-import javax.swing.*;
+import java.util.ArrayList;
 
 public class Defensor extends Personaje {
 
@@ -12,8 +14,7 @@ public class Defensor extends Personaje {
     public Defensor(int x, int y, boolean es_Defensor, String directorio, Tablero tablero)
     {
         super(x,y,true,directorio, tablero);
-
-
+        agregarItem(2,3,this,"collar");
     }
     public void setTurno(int turno){
         this.turno=turno;
@@ -24,7 +25,28 @@ public class Defensor extends Personaje {
         return this.turno;
     }
 
-    @Override
+    public ArrayList<Item> items = new ArrayList<Item>();
+
+
+    public ArrayList<Item> getItems() {
+        return items;
+    }
+
+    public Item getItem (String tipo){
+        for (int i = 0; i <= items.size(); i ++){
+            if (((items.get(i)).getTipo()).equals(tipo))
+            {
+                return items.get(i);
+            }
+        }
+        return null;
+    }
+
+    public void agregarItem(int x, int y, Defensor tablero, String tipo)
+    {
+        items.add(new Item(x, y, tablero, tipo));
+    }
+
     public boolean permitirMover(int posX, int posY)
     {                
         Personaje personaje = tablero.getPiece(posX, posY);
@@ -34,7 +56,7 @@ public class Defensor extends Personaje {
         {
             return false;
         }
-        if ((cuadro.getTipo()).equals("Base"))
+        if ((cuadro.getDirectorioC()).equals("Base.png") || (cuadro.getDirectorioC()).equals("tumba.png"))
         {
             return false;
         }
@@ -75,12 +97,16 @@ public class Defensor extends Personaje {
 
             for (int i = 1; i < diferencia; i++) {
                 Personaje p = tablero.getPiece(this.getX(), this.getY() + i);
+                Cuadro c = tablero.getCuadro(this.getX(), this.getY() + i);
                 if (diferencia > this.getDistancia()){
                     return false;
                 }
-                if (p != null) {
-                    return false;
-                }
+                /*if ((c.getDirectorioC()).equals("tumba.png")){return true;}
+                if (p != null){
+                    if (p.esDefensor()) {
+                        return false;
+                    }else {return true;}
+                }*/
             }
         }
 
@@ -90,16 +116,13 @@ public class Defensor extends Personaje {
 
             diferencia = Math.abs(posY - this.getY());
 
-
-
             for (int i = 1; i < diferencia; i++) {
                 Personaje p = tablero.getPiece(this.getX(), this.getY() - i);
+                Cuadro c = tablero.getCuadro(this.getX(), this.getY() - i);
                 if (diferencia > this.getDistancia()){
                     return false;
                 }
-                if (p != null) {
-                    return false;
-                }
+              
             }
         }
 
@@ -107,18 +130,12 @@ public class Defensor extends Personaje {
 
             int diferencia;
 
-
             diferencia = Math.abs(posX - this.getX());
-
-
-
 
             for (int i = 1; i < diferencia; i++) {
                 Personaje p = tablero.getPiece(this.getX() - i, this.getY());
+                Cuadro c = tablero.getCuadro(this.getX() -i, this.getY());
                 if (diferencia > this.getDistancia()){
-                    return false;
-                }
-                if (p != null) {
                     return false;
                 }
             }
@@ -132,23 +149,26 @@ public class Defensor extends Personaje {
 
             for (int i = 1; i < diferencia; i++) {
                 Personaje p = tablero.getPiece(this.getX() + i, this.getY());
+                Cuadro c = tablero.getCuadro(this.getX() + i, this.getY());
                 if (diferencia > this.getDistancia()){
                     return false;
                 }
-                if (p != null) {
-                    return false;
-                }
+           
             }
         }
 
         return true;
     }
-    
+
+
+
     @Override
     public void mover(int x, int y)
     {
         this.setX(x);
         this.setY(y);
     }
-    
+
+
 }
+

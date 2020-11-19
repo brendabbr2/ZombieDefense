@@ -11,10 +11,38 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class Estructura extends JFrame {
 
-    private final Object JButton;
+    private Object JButton;
+    private String nombre;
+    private boolean bItem;
+    private boolean bUsar;
+    private boolean bAtacar;
     Component component;
     private final JLabel mensaje = new JLabel("¡Defiende la base de los zombies!");
     private final JLabel men_base = new JLabel("                                    Base↓");
+
+    public boolean isbItem() {
+        return bItem;
+    }
+
+    public void setbItem(boolean bItem) {
+        this.bItem = bItem;
+    }
+
+    public boolean isbUsar() {
+        return bUsar;
+    }
+
+    public void setbUsar(boolean bUsar) {
+        this.bUsar = bUsar;
+    }
+
+    public boolean isbAtacar() {
+        return bAtacar;
+    }
+
+    public void setbAtacar(boolean bAtacar) {
+        this.bAtacar = bAtacar;
+    }
 
     public Estructura()
     {
@@ -28,51 +56,36 @@ public class Estructura extends JFrame {
         tools.setFloatable(false);
         this.add(tools, BorderLayout.PAGE_START);
 
-
-        class mostrarItems implements ActionListener{
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                JOptionPane.showMessageDialog(null, "Lista Items");
-            }
-        }
-
-        class atacarEnemigo implements ActionListener{
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                JOptionPane.showMessageDialog(null, "Ataco enemigo");
-            }
-        }
-
-        class usarItem implements ActionListener{
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                JOptionPane.showMessageDialog(null, "Usamos item");
-            }
-        }
-
         JButton Items = new JButton("Items"); //Boton para ver la lista de items
-        Items.addActionListener(new mostrarItems());
+        Items.addActionListener(new MostrarItems());
+        Items.setEnabled(true);
 
-        JButton Atacar = new JButton("Atacar"); //Boton para atacar
-        Atacar.addActionListener(new atacarEnemigo());
 
         JButton Usar = new JButton("Usar Item"); //Boton para usar Item
-        Usar.addActionListener(new usarItem());
+        Usar.addActionListener(new UsarItem());
+        Usar.setEnabled(true);
+
+        JButton Atacar = new JButton("Atacar"); //Boton para usar Item
+        Atacar.addActionListener(new Atacar());
+        Atacar.setEnabled(true);
 
         tools.add(Items);
-        tools.add(Atacar);
         tools.add(Usar);
+        tools.add(Atacar);
 
         tools.addSeparator();
         tools.add(mensaje);
-        tools.add(men_base, 5);
+        tools.add(men_base);
  
         this.setLocation(200, 50);
         this.pack();
         this.setVisible(true);
 
-        JButton = null;
+
+
+
     }
+
 
 
 }

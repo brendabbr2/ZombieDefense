@@ -1,8 +1,12 @@
 package Personajes;
 
+import Zombie_Defense.Estructura;
 import Zombie_Defense.Tablero;
 
-public class Personaje {
+import java.util.ArrayList;
+import java.util.stream.Stream;
+
+public class Personaje extends ArrayList<Personaje> {
     private int x; //Coordenadas
     private int y;
     private int vida;
@@ -37,8 +41,7 @@ public class Personaje {
     private String directorio;        //Lugar de imagen
     public Tablero tablero;           //Existencia en el tablero
 
-    public Personaje(int x, int y, boolean es_Defensor, String directorio, Tablero tablero)
-    {
+    public Personaje(int x, int y, boolean es_Defensor, String directorio, Tablero tablero) {
         this.x = x;
         this.y = y;
         this.es_Defensor = es_Defensor;
@@ -52,36 +55,35 @@ public class Personaje {
     }
 
     /////////////////////////////////////////////Setters y getters
-    public String getDirectorio()
-    {
+    public String getDirectorio() {
         return directorio;
     }
-    public void setDirectorio(String directorio)
-    {
+
+    public void setDirectorio(String directorio) {
         this.directorio = directorio;
     }
-    public boolean esDefensor()
-    {
+
+    public boolean esDefensor() {
         return es_Defensor;
     }
-    public boolean esAtacante()
-    {
+
+    public boolean esAtacante() {
         return !es_Defensor;
     }
-    public void setX(int x)
-    {
+
+    public void setX(int x) {
         this.x = x;
     }
-    public void setY(int y)
-    {
+
+    public void setY(int y) {
         this.y = y;
     }
-    public int getX()
-    {
+
+    public int getX() {
         return x;
     }
-    public int getY()
-    {
+
+    public int getY() {
         return y;
     }
 
@@ -91,14 +93,20 @@ public class Personaje {
     }
 
     public void setDefensa() {
-        if ((this.directorio).equals("Fantasma.png")){ this.defensa = 3;}
-        else if ((this.directorio).equals("Vampiro.png")){this.defensa = 2;}
-        else if ((this.directorio).equals("Zombie.png")){this.defensa = 1;}
-        else if ((this.directorio).equals("Caballero.png")){this.defensa = 3;}
-        else if ((this.directorio).equals("Soldado.png")){this.defensa = 1;}
-        else{this.defensa = 2;} //Guerreros
+        if ((this.directorio).equals("Fantasma.png")) {
+            this.defensa = 3;
+        } else if ((this.directorio).equals("Vampiro.png")) {
+            this.defensa = 2;
+        } else if ((this.directorio).equals("Zombie.png")) {
+            this.defensa = 1;
+        } else if ((this.directorio).equals("Caballero.png")) {
+            this.defensa = 3;
+        } else if ((this.directorio).equals("Soldado.png")) {
+            this.defensa = 1;
+        } else {
+            this.defensa = 2;
+        } //Guerreros
     }
-
 
 
     public int getDistancia() {
@@ -106,17 +114,23 @@ public class Personaje {
     }
 
     public void setDistancia() {
-        if ((this.directorio).equals("Fantasma.png")){ this.distancia = 1;}
-        else if ((this.directorio).equals("Vampiro.png")){this.distancia = 2;}
-        else if ((this.directorio).equals("Zombie.png")){this.distancia = 3;}
-        else if ((this.directorio).equals("Caballero.png")){this.distancia = 2;}
-        else if ((this.directorio).equals("Soldado.png")){this.distancia = 3;}
-        else{this.distancia = 1;} //Guerreros
+        if ((this.directorio).equals("Fantasma.png")) {
+            this.distancia = 1;
+        } else if ((this.directorio).equals("Vampiro.png")) {
+            this.distancia = 2;
+        } else if ((this.directorio).equals("Zombie.png")) {
+            this.distancia = 3;
+        } else if ((this.directorio).equals("Caballero.png")) {
+            this.distancia = 2;
+        } else if ((this.directorio).equals("Soldado.png")) {
+            this.distancia = 3;
+        } else {
+            this.distancia = 1;
+        } //Guerreros
 
     }
 
-    public void setMovido(boolean movido)
-    {
+    public void setMovido(boolean movido) {
         this.movido = movido;
     }
 
@@ -126,6 +140,7 @@ public class Personaje {
 
     public void setVida(int vida) {
         this.vida = vida;
+
     }
 
     public int getAtaque() {
@@ -133,31 +148,40 @@ public class Personaje {
     }
 
     public void setAtaque() {
-        if ((this.directorio).equals("Fantasma.png")){ this.ataque = 3;}
-        else if ((this.directorio).equals("Vampiro.png")){this.ataque = 2;}
-        else if ((this.directorio).equals("Zombie.png")){this.ataque = 1;}
-        else if ((this.directorio).equals("Caballero.png")){this.ataque = 3;}
-        else if ((this.directorio).equals("Soldado.png")){this.ataque = 1;}
-        else{this.ataque = 2;} //Guerreros
+        if ((this.directorio).equals("Fantasma.png")) {
+            this.ataque = 3;
+        } else if ((this.directorio).equals("Vampiro.png")) {
+            this.ataque = 2;
+        } else if ((this.directorio).equals("Zombie.png")) {
+            this.ataque = 1;
+        } else if ((this.directorio).equals("Caballero.png")) {
+            this.ataque = 3;
+        } else if ((this.directorio).equals("Soldado.png")) {
+            this.ataque = 1;
+        } else {
+            this.ataque = 2;
+        } //Guerreros
 
     }
 
 
-
-    public boolean getMovido()
-    {
+    public boolean getMovido() {
         return movido;
     }
+
     /////////////////////////////////////////////Metodos
-    public boolean permitirMover(int posX, int posY)
-    {
-        return false;
+    public boolean permitirMover(int posX, int posY) {
+        return true;
     }
-    
-    public void mover(int x, int y)
-    {
+
+    public void mover(int x, int y) {
         this.setX(x);
         this.setY(y);
     }
-    
+
+
+    @Override
+    public Stream<Personaje> stream() {
+        return null;
+    }
 }

@@ -60,5 +60,7 @@ public class Atacante extends Personaje {
         this.setX(x);
         this.setY(y);
     }
-    
+
+
+
 }

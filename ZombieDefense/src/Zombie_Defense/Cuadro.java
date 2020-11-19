@@ -4,16 +4,17 @@ package Zombie_Defense;
 public class Cuadro {
     private final int x;
     private final int y;
-    private String tipo;
-    /*Hay dos tipos:
+    private String directorioC;
+    /*Hay tres tipos:
     Barrera:
     Tumba: Spawning Points
+    Vacio
     * */
     
-    public Cuadro(int x, int y, String tipo){
+    public Cuadro(int x, int y, String directorioC){
         this.x = x;
         this.y = y;
-        this.tipo = tipo;
+        this.directorioC = directorioC;
     }
     
     public int getX() {
@@ -24,12 +25,13 @@ public class Cuadro {
         return y;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getDirectorioC() {
+
+        return directorioC;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setDirectorioC(String directorioC) {
+        this.directorioC = directorioC;
     }
 }
 

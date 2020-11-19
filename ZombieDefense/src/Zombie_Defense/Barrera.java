@@ -14,7 +14,7 @@ public class Barrera extends Cuadro{
     */
     public Barrera(int x, int y, String tipo)
     {
-        super(x, y, "Barrera");
+        super(x, y, "Barrera.png");
     }
 
     public void setIntensidad(int intensidad) {
